@@ -4,7 +4,7 @@ const Login = () => {
     return (
         <div>
             I am Login
-            <Link className='font-black ml-10' to={'/register'}>Go to Register</Link>
+            <Link className='font-black ml-10' to={'/'}>Go to Register</Link>
         </div>
     );
 };
