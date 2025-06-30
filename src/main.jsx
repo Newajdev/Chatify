@@ -5,11 +5,15 @@ import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
 import router from './App.jsx'
 import AuthProvider from './context/AuthProvider.jsx'
+import { ThemeProvider } from '@mui/material'
+import Theme from './utils/Themes.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
+      <ThemeProvider theme={Theme}>
+        <RouterProvider router={router}></RouterProvider>
+      </ThemeProvider>
     </AuthProvider>
   </StrictMode>,
 )
