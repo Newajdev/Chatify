@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
 import router from './App.jsx'
-import AuthProvider from './context/AuthProvider.jsx'
+import AuthProvider from './provider/AuthProvider.jsx'
 import { ThemeProvider } from '@mui/material'
 import Theme from './utils/Themes.jsx'
 
