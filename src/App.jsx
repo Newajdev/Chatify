@@ -3,6 +3,7 @@ import './App.css'
 import Register from './pages/register/Register'
 import Login from './pages/login/Login'
 import Home from './pages/home/Home'
+import PrivateRoute from './router/PrivateRoute'
 
 const router = createBrowserRouter([
   {
@@ -11,16 +12,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <PrivateRoute><Home></Home></PrivateRoute>
+      },
+      {
+        path: "/register",
         element: <Register></Register>
       },
       {
         path: "/login",
         element: <Login></Login>
       },
-      {
-        path: "/home",
-        element: <Home></Home>
-      }
+      
     ]
   }
 ])

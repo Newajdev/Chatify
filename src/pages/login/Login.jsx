@@ -10,8 +10,8 @@ import { AuthContext } from '../../provider/AuthProvider';
 import { GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
-    const { user, SingInUser, GoogleSingIn } = useContext(AuthContext)
-    const DEmail = user.email;
+    const { user, SingInUser, GoogleLogin } = useContext(AuthContext)
+    const DEmail = user?.email;
     const [PassError, setPassError] = useState('')
     const navigate = useNavigate()
 
@@ -90,12 +90,14 @@ const Login = () => {
             }
         }
     }
-    var id_token = response.credential
-    const credential = GoogleAuthProvider.credential(id_token);
+    
+    const provider = new GoogleAuthProvider();
     const hendlerSingIn=() =>{
-        GoogleSingIn(credential)
-        .catch(error => console.log(error)
-        )
+       GoogleLogin(provider)
+        .then(() =>{
+            navigate('/home')
+        })
+        .catch(error => alert(error))
     }
     return (
         <div className="lg:h-screen flex justify-center items-center bg-gray-100">
@@ -124,7 +126,7 @@ const Login = () => {
                         <Button type="submit" variant="PrimaryBtn">Login</Button>
                         <Button onClick={hendlerSingIn} type="submit" variant="SecendaryBtn"><FcGoogle className='text-2xl mr-3' /> Login With Google</Button>
 
-                        <p className="text-center mt-8 text-gray-400 font-semibold text-base">Already Have An Account ? <Link className="text-[#087A8E] font-black hover:cursor-pointer " to='/'>Register</Link></p>
+                        <p className="text-center mt-8 text-gray-400 font-semibold text-base">Already Have An Account ? <Link className="text-[#087A8E] font-black hover:cursor-pointer " to='/register'>Register</Link></p>
 
                     </form>
                 </div>

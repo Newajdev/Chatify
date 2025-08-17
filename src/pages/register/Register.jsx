@@ -8,16 +8,16 @@ import '../../../src/App.css'
 import { InputField } from '../../utils/Themes';
 import { AuthContext } from '../../provider/AuthProvider';
 import Toast from 'sweetalert2'
-import { GoogleAuthProvider } from 'firebase/auth';
+
 
 
 
 const Register = () => {
-    const { LoginUser, verifyEmail, GoogleLogin } = useContext(AuthContext)
+    const { LoginUser, verifyEmail, GoogleLogin, logOut } = useContext(AuthContext)
     const [Visible, setVisible] = useState(false)
     const [PassError, setPassError] = useState('')
     const navigate = useNavigate()
-    const provider = new GoogleAuthProvider()
+
 
     const HendleCheckPassword = () => {
         setVisible(!Visible)
@@ -42,7 +42,7 @@ const Register = () => {
 
         if (!Password) {
             return setPassError('Please Entart A 8 Digit Password');
-            // console.log(PassError);
+
         }
         if (!NumCheck.test(Password)) {
             setPassError('')
@@ -70,13 +70,14 @@ const Register = () => {
                 .then((result) => {
                     verifyEmail(result.user)
                         .then(() => {
+                            logOut()
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Verification email sent!'
                             });
                             const UserDetails = { FName, LName, Email }
                             navigate('/login')
-                            
+
                         })
                         .catch((error) => {
                             console.error("Error sending email verification:", error.message);
@@ -85,23 +86,20 @@ const Register = () => {
 
                 })
                 .catch(error => console.log(error))
-
-            // console.log(UserDetails);
-
         }
 
 
     }
 
-    const henlderGoogleLogin = ()=>{
-        GoogleLogin(provider)
-        .then(() =>{
-            navigate('/login')
-        })
-        .catch(error => alert(error))
+    const henlderGoogleLogin = () => {
+        GoogleLogin()
+            .then(() => {
+                navigate('/home')
+            })
+            .catch(error => alert(error))
     }
 
-    
+
     return (
         <div className="lg:h-screen flex justify-center items-center bg-gray-100">
             <div className='md:flex lg:flex my-5 md:m-10 lg:m-20 justify-between border-2 border-[#0000001F] rounded-2xl bg-white'>

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithCredential, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, signInWithCredential, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import auth from '../firebase/Firebase.config';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -7,48 +7,60 @@ export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [user, setuser] = useState([])
+    const [loading, setLoading] = useState(true)
+    const provider = new GoogleAuthProvider()
 
 
 
     const LoginUser = (Email, Password) => {
+        setLoading(false)
         return createUserWithEmailAndPassword(auth, Email, Password)
     }
     const verifyEmail = (user) => {
+        setLoading(false)
         return sendEmailVerification(user);
     };
     const SingInUser = (Email, Password) => {
+        setLoading(false)
         return signInWithEmailAndPassword(auth, Email, Password)
     }
 
-    const GoogleLogin = (provider) => {
+    const GoogleLogin = () => {
+        setLoading(false)
         return signInWithPopup(auth, provider)
     }
-    const GoogleSingIn = (credential) => {
-        return signInWithCredential(auth, credential)
+
+
+    const logOut = ()=>{
+        setLoading(false)
+        return signOut(auth)
+
     }
+    
 
     useEffect(() => {
         const unsubsrcibe = onAuthStateChanged(auth, currentUser => {
-
+            setLoading(false)
             setuser(currentUser)
 
         });
         return () => {
             return unsubsrcibe()
         }
-
+        
     })
 
-    console.log(user);
     
 
     const Usersinfo = {
         user,
+        loading,
         LoginUser,
         verifyEmail,
         SingInUser,
         GoogleLogin,
-        GoogleSingIn
+        logOut,
+       
     }
     return (
         <AuthContext.Provider value={Usersinfo}>
