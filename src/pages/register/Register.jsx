@@ -16,6 +16,8 @@ const Register = () => {
     const { LoginUser, verifyEmail, GoogleLogin, logOut } = useContext(AuthContext)
     const [Visible, setVisible] = useState(false)
     const [PassError, setPassError] = useState('')
+    const [emailError, setEmailError] = useState('')
+    const [nameError, setNameError] = useState('')
     const navigate = useNavigate()
 
 
@@ -39,33 +41,60 @@ const Register = () => {
         const CapitalLetterCheck = /^(?=.*[A-Z])/;
         const SCharecterCheck = /^(?=.*[@$!%*?#&])/;
         const ValidPass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+        const ValidEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
+        if(!FName){
+            setNameError('')
+            return setNameError('Please Entart your Name')
+        }
+
+         if(!ValidEmail.test(Email)){
+            setEmailError('')
+            setNameError('')
+            return setEmailError('Please Entart A valid Email')
+        }
+        
         if (!Password) {
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart A 8 Digit Password');
-
         }
         if (!NumCheck.test(Password)) {
             setPassError('')
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart At least 1 Number');
         }
         if (!SmallLetterCheck.test(Password)) {
             setPassError('')
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart At least 1 Lowercase Charecter (like: a, b, c)');
         }
         if (!CapitalLetterCheck.test(Password)) {
             setPassError('')
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart At least 1 Uppercase Charecter (like: A, B, C)');
         }
         if (!SCharecterCheck.test(Password)) {
             setPassError('')
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart At least 1 Special Charecter (like: #, $, %)');
         }
         if (!CharecterCheck.test(Password)) {
             setPassError('')
+            setEmailError('')
+            setNameError('')
             return setPassError('Please Entart A 8 Digit Password');
         }
-        if (ValidPass.test(Password)) {
+       
+
+        if (ValidPass.test(Password) && FName && ValidEmail.test(Email)) {
             setPassError('')
+            setNameError('')
+            setEmailError('')
             LoginUser(Email, Password)
                 .then((result) => {
                     verifyEmail(result.user)
@@ -111,9 +140,10 @@ const Register = () => {
                     </div>
                     <form onSubmit={hendlerRegister}>
 
-                        <div className="flex flex-col mb-6 w-full text-red-600">
+                        <div className="flex flex-col mb-6 w-full">
 
-                            <InputField variant="outlined" label="First Name" type='text' name='fname' required />
+                            <InputField variant="outlined" label="First Name" type='text' name='fname' />
+                            <p className='text-red-500 mt-1 text-sm'>{nameError}</p>
 
                         </div>
 
@@ -122,7 +152,8 @@ const Register = () => {
                         </div>
 
                         <div className="flex flex-col mb-6 w-full">
-                            <InputField label="Your valid Email Address" variant="outlined" type='email' name='email' required />
+                            <InputField label="Your valid Email Address" variant="outlined" type='email' name='email' />
+                            <p className='text-red-500 mt-1 text-sm'>{emailError}</p>
                         </div>
 
                         <div className="flex flex-col mb-6 relative">
