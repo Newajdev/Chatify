@@ -4,11 +4,12 @@ import Register from './pages/register/Register'
 import Login from './pages/login/Login'
 import Home from './pages/home/Home'
 import PrivateRoute from './router/PrivateRoute'
+import Root from '../src/layout/Root'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Outlet></Outlet>,
+    element: <Root></Root>,
     children: [
       {
         path: "/",
