@@ -6,8 +6,8 @@ const Root = () => {
     const location = useLocation()
     return (
         <div className="flex items-center">
-            <div className="w-[15%] h-screen p-6">{(location.pathname === '/login' || location.pathname == '/register') || <Navbar></Navbar>}</div>
-            <div className=" h-screen flex-1 p-10"><Outlet></Outlet> </div>
+            {(location.pathname === '/login' || location.pathname == '/register') || <div className="w-[15%] h-screen p-6"><Navbar></Navbar></div>}
+            <div className=" h-screen flex-1"><Outlet></Outlet> </div>
 
 
         </div>

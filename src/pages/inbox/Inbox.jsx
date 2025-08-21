@@ -1,8 +1,9 @@
-import  { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+
+const Inbox = () => {
     const UserInfo = useSelector((state)=> state.activeUser.value)
     const navigate = useNavigate()
 
@@ -11,14 +12,11 @@ const Home = () => {
             navigate('/login')
         }
     },[])
-
-    
-
     return (
         <div className='p-10'>
-            This Is Home
+            This Is inbox
         </div>
     );
 };
 
-export default Home;
+export default Inbox;
