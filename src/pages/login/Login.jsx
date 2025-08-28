@@ -8,7 +8,7 @@ import '../../../src/App.css'
 import { InputField } from '../../utils/Themes';
 import { AuthContext } from '../../provider/AuthProvider';
 import { RiseLoader } from 'react-spinners';
-import { useDispatch } from 'react-redux';
+import { useDispatch,} from 'react-redux';
 import { userDetails } from '../../slice/user/UserInfoSlice';
 
 
@@ -24,6 +24,7 @@ const Login = () => {
     const [varifyEmail, setVarifyEmail] = useState('')
     const [emailSend, setEmailSend] = useState(false)
     const Dispatch = useDispatch()
+    
 
 
     const hendlerLogin = e => {
@@ -80,7 +81,7 @@ const Login = () => {
             setPassError('')
             setEmailError('')
             SingInUser(Email, Password)
-            .then(() => {
+                .then(() => {
                     setLoading(true)
                     setError('')
                     if (user.emailVerified) {
@@ -105,7 +106,17 @@ const Login = () => {
     const hendlerSingInWithGoogle = () => {
         GoogleLogin()
             .then(() => {
-                navigate('/home')
+                if (user.emailVerified) {
+                    Dispatch(userDetails(user))
+                    localStorage.setItem('userInfo:', JSON.stringify(user))
+                    setLoading(false)
+                    navigate('/')
+                } else {
+                    setError('Your email is not verified. A verification link has been sent to your email address.')
+                    setLoading(false)
+                    verifyEmail(user)
+                    logOut()
+                }
             })
             .catch(error => alert(error))
     }

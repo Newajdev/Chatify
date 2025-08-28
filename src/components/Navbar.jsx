@@ -4,20 +4,28 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RiLogoutBoxRLine } from "react-icons/ri";
-import { useContext, useRef, useState } from "react";
+import { createRef, useContext, useRef, useState } from "react";
 import { AuthContext } from "../provider/AuthProvider";
 import { MdFileUpload } from "react-icons/md";
 import placeHolder from "../assets/placeholder.jpg"
 import { Button } from "@mui/material";
-
-
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
+import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 
 const Navbar = () => {
-    const { logOut } = useContext(AuthContext)
+    const storage = getStorage();
+    const { user, logOut, } = useContext(AuthContext)
     const navigate = useNavigate()
     const [uploadImage, setUploadImage] = useState(false)
     const [loading, setLoading] = useState(false)
     const clieckref = useRef(null)
+    const [image, setImage] = useState();
+    const [cropData, setCropData] = useState("");
+    const cropperRef = createRef();
+
+
 
     const hendlerSingOut = () => {
         logOut()
@@ -26,15 +34,50 @@ const Navbar = () => {
     }
 
     const hendleClickOutSite = (e) => {
-        if(clieckref.current.contains(e.target) === false){
+        if (clieckref.current.contains(e.target) === false) {
             setUploadImage(false)
-        }  
+        }
     }
-    // const hendleUploadPhoto = (e) => {
-    //     if(clieckref.current.contains(e.target) === false){
-    //         setUploadImage(false)
-    //     }  
-    // }
+
+    const onChange = (e) => {
+        e.preventDefault();
+
+        let files;
+        if (e.dataTransfer) {
+            files = e.dataTransfer.files;
+        } else if (e.target) {
+            files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImage(reader.result);
+
+
+        };
+        reader.readAsDataURL(files[0]);
+    };
+
+    const getCropData = () => {
+
+
+        if (typeof cropperRef.current?.cropper !== "undefined") {
+            setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+
+            const storageRef = ref(storage, user?.uid);
+
+            const message4 = cropperRef.current?.cropper.getCroppedCanvas().toDataURL();
+            uploadString(storageRef, message4, 'data_url').then(() => {
+
+            });
+            getDownloadURL(storageRef).then((downloadURL) => {
+                updateProfile(user,{
+                    photoURL: `${downloadURL}`
+               }).then(()=>setUploadImage(false))
+
+            });
+
+        }
+    };
 
     return (
         <>
@@ -42,15 +85,15 @@ const Navbar = () => {
 
                 <div className="w-full flex flex-col justify-center items-center flex-wrap gap-4 h-[25%] ">
                     <div className='bg-white w-28 h-28  rounded-full group relative'>
-                        <img className="rounded-full object-cover" src={placeHolder} alt="" />
+                        <img className="rounded-full object-cover" src={user.photoURL ? user.photoURL : placeHolder} alt="" />
 
-                        <div onClick={()=> setUploadImage(true)} className="w-full h-full bg-[#00000036] rounded-full opacity-0 group-hover:opacity-100 duration-300 absolute top-0 left-0">
+                        <div onClick={() => setUploadImage(true)} className="w-full h-full bg-[#00000036] rounded-full opacity-0 group-hover:opacity-100 duration-300 absolute top-0 left-0">
                             <div className="w-full h-full flex items-center justify-center">
                                 <MdFileUpload className="text-4xl text-white animate-bounce" />
                             </div>
                         </div>
                     </div>
-                    <h2 className="text-center w-full text-2xl font-bold text-white ">Md Shale Newaj</h2>
+                    <h2 className="text-center w-full text-2xl font-bold text-white ">{user.displayName}</h2>
                 </div>
                 <div className="h-[50%] w-full flex justify-center items-center">
                     <ul className="flex flex-col gap-10 navbar">
@@ -109,19 +152,44 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="h-[25%] w-full flex items-end justify-center">
-                    <RiLogoutBoxRLine onClick={hendlerSingOut} className="text-5xl text-white" />
+                    <RiLogoutBoxRLine onClick={hendlerSingOut} className="text-5xl text-white hover:cursor-pointer hover:text-6xl duration-200" />
                 </div>
             </div>
             {/* ------------------------- */}
             <div onClick={hendleClickOutSite} className={`w-full h-screen ${!uploadImage && 'hidden'}  ${uploadImage && 'absolute top-0 left-0'} flex justify-center items-center shadow-2xl bg-[#00000052] `}>
                 <div ref={clieckref} className='bg-white w-[30%] p-16 rounded-2xl '>
-
-                    <form>
-                        <div className='flex gap-6'>
-                            <Button onClick={()=> setUploadImage(true)} type="submit" variant="PrimaryBtn">{loading ? <RiseLoader color={'white'} size={10} /> : 'Back to home'}</Button>
-                            <Button type="submit" variant="PrimaryBtn">{loading ? <RiseLoader color={'white'} size={10} /> : 'Upload'}</Button>
+                    <div style={{ width: "100%" }}>
+                        <h2>Upload your Profile Image</h2>
+                        <div className="border flex justify-center items-center p-2 rounded-xl bg-gray-200 ">
+                            <input className="w-full " type="file" onChange={onChange} />
                         </div>
-                    </form>
+
+                        <div className="my-4">
+                            {
+                                image && <Cropper
+                                    ref={cropperRef}
+                                    style={{ width: "100%" }}
+                                    initialAspectRatio={1}
+                                    preview=".img-preview"
+                                    src={image}
+                                    viewMode={1}
+                                    minCropBoxHeight={10}
+                                    minCropBoxWidth={10}
+                                    background={false}
+                                    responsive={true}
+                                    autoCropArea={1}
+                                    checkOrientation={false}
+                                    guides={true}
+                                />
+                            }
+                        </div>
+
+                    </div>
+
+                    <div className='flex gap-6'>
+                        <Button onClick={() => setUploadImage(true)} type="submit" variant="PrimaryBtn">{loading ? <RiseLoader color={'white'} size={10} /> : 'Back to home'}</Button>
+                        <Button onClick={getCropData} type="submit" variant="PrimaryBtn">{loading ? <RiseLoader color={'white'} size={10} /> : 'Upload'}</Button>
+                    </div>
                 </div>
             </div>
         </>
