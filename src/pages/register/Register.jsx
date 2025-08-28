@@ -10,12 +10,15 @@ import { AuthContext } from '../../provider/AuthProvider';
 import { toast, ToastContainer } from 'react-toastify';
 import { RiseLoader } from "react-spinners";
 import { updateProfile } from 'firebase/auth';
+import { useSelector } from 'react-redux';
+import { getDatabase, ref, set } from "firebase/database";
 
 
 
 
 
 const Register = () => {
+    const db = getDatabase();
     const { LoginUser, verifyEmail, GoogleLogin, logOut, } = useContext(AuthContext)
     const [Visible, setVisible] = useState(false)
     const [PassError, setPassError] = useState('')
@@ -23,6 +26,7 @@ const Register = () => {
     const [nameError, setNameError] = useState('')
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
+    const UserData = useSelector(state => state.activeUser.value)
 
     const hendlerRegister = e => {
         e.preventDefault()
@@ -106,12 +110,19 @@ const Register = () => {
                 .then((result) => {
                     updateProfile(result.user, {
                         displayName: LName,
-                        photoURL: null
+                        photoURL: 'https://firebasestorage.googleapis.com/v0/b/chatify-502b2.firebasestorage.app/o/placeholder.jpg?alt=media&token=32191ed5-8e60-4736-94d1-5266085203ce'
                     }).then(() => {
                         setLoading(false)
                         verifyEmail(result.user)
                         logOut()
                         navigate('/login')
+                        console.log(result.user);
+                        set(ref(db, 'AllUsers/' + result.user.uid), {
+                            username: result.user.displayName,
+                            email: result.user.email,
+                            photo: result.user.photoURL
+                        });
+
                     }).catch((error) => {
                         console.log(error);
 

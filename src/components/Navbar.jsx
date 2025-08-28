@@ -14,6 +14,7 @@ import "cropperjs/dist/cropper.css";
 import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 
+
 const Navbar = () => {
     const storage = getStorage();
     const { user, logOut, } = useContext(AuthContext)
@@ -24,6 +25,7 @@ const Navbar = () => {
     const [image, setImage] = useState();
     const [cropData, setCropData] = useState("");
     const cropperRef = createRef();
+  
 
 
 
@@ -70,9 +72,12 @@ const Navbar = () => {
 
             });
             getDownloadURL(storageRef).then((downloadURL) => {
-                updateProfile(user,{
+                updateProfile(user, {
                     photoURL: `${downloadURL}`
-               }).then(()=>setUploadImage(false))
+                }).then(() => {
+                    setUploadImage(false)
+                }
+                )
 
             });
 
@@ -156,7 +161,7 @@ const Navbar = () => {
                 </div>
             </div>
             {/* ------------------------- */}
-            <div onClick={hendleClickOutSite} className={`w-full h-screen ${!uploadImage && 'hidden'}  ${uploadImage && 'absolute top-0 left-0'} flex justify-center items-center shadow-2xl bg-[#00000052] `}>
+            <div onClick={hendleClickOutSite} className={`w-full h-screen ${!uploadImage && 'hidden'}  ${uploadImage && 'absolute top-0 left-0 z-10'} flex justify-center items-center shadow-2xl bg-[#00000052] `}>
                 <div ref={clieckref} className='bg-white w-[30%] p-16 rounded-2xl '>
                     <div style={{ width: "100%" }}>
                         <h2>Upload your Profile Image</h2>
