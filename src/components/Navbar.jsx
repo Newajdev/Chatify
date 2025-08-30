@@ -13,10 +13,12 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { getDownloadURL, getStorage, ref, uploadString } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
+import { getDatabase, ref as dbRef, update } from "firebase/database";
 
 
 const Navbar = () => {
     const storage = getStorage();
+    const database = getDatabase()
     const { user, logOut, } = useContext(AuthContext)
     const navigate = useNavigate()
     const [uploadImage, setUploadImage] = useState(false)
@@ -79,6 +81,8 @@ const Navbar = () => {
                 }
                 )
 
+                const userRef = dbRef(database, `AllUsers/${user?.uid}`);
+                update(userRef, {photo: downloadURL})
             });
 
         }
@@ -89,7 +93,7 @@ const Navbar = () => {
             <div className='bg-[#5F35F5] h-full rounded-3xl flex flex-col items-center py-10 justify-between'>
 
                 <div className="w-full flex flex-col justify-center items-center flex-wrap gap-4 h-[25%] ">
-                    <div className='bg-white w-28 h-28  rounded-full group relative'>
+                    <div className='bg-white w-28 h-28  rounded-full overflow-hidden group relative'>
                         <img className="rounded-full object-cover" src={user.photoURL ? user.photoURL : placeHolder} alt="" />
 
                         <div onClick={() => setUploadImage(true)} className="w-full h-full bg-[#00000036] rounded-full opacity-0 group-hover:opacity-100 duration-300 absolute top-0 left-0">

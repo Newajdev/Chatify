@@ -117,7 +117,7 @@ const Register = () => {
                         logOut()
                         navigate('/login')
                         console.log(result.user);
-                        set(ref(db, 'AllUsers/' + result.user.uid), {
+                        set(ref(db, 'AllUsers/'+ result.user.uid), {
                             username: result.user.displayName,
                             email: result.user.email,
                             photo: result.user.photoURL
