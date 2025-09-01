@@ -1,2 +1,20 @@
 @import "tailwindcss";
 
+.Sender::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    bottom: 0px;
+    border: 6px solid transparent;
+    border-bottom-color: #F1F1F1;
+    border-right-color: #F1F1F1;
+}
+.Reciver::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    bottom: 0px;
+    border: 6px solid transparent;
+    border-bottom-color: #5F35F5;
+    border-left-color: #5F35F5;
+}
