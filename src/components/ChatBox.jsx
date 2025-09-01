@@ -35,19 +35,22 @@ const ChatBox = () => {
     return (
         <div className='border border-gray-200 h-full mx-10 rounded-2xl shadow-2xl flex flex-col '>
             {/* Profile Area */}
-            <div className='w-full flex px-10 border-b-2 rounded-t-2xl border-gray-200 bg-gray-50'>
+            <div className='w-full flex items-center px-10 border-b-2 rounded-t-2xl border-gray-200 bg-gray-50'>
                 <ItemsCard />
+                <button className='bg-[#5F35F5] px-4 py-1 rounded-lg text-white text-xl font-semibold'>
+                    
+                </button>
             </div>
-            
+
             {/* Chat Area */}
             <div className='w-full flex-1 px-10 overflow-y-scroll h-full'>
                 <div className='h-1 flex flex-col justify-between '>
-                    <ChatBubble sender message={'hello'}/>
-                    <ChatBubble reciver message={'hi how are you?'}/>
-                    <ChatBubble sender message={'I am fine. you?'}/>
-                    <ChatBubble reciver message={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem sequi sint provident ex non eveniet tempora asperiores a impedit alias! Explicabo in reiciendis adipisci dolore minus. Cupiditate obcaecati molestiae rem ducimus eaque ipsa at? Voluptate repellendus accusamus molestias quis consequuntur! Et non nisi neque quos odio suscipit soluta voluptatibus optio?'}/>
-                    <ChatBubble sender message={' non eveniet tempora asperiores a impedit alias! Explicabo in reiciendis adipisci dolore minus. Cupiditate obcaecati molestiae rem ducimus eaque ipsa at? Voluptate repellendus accusamus molestias quis consequuntur! Et non nisi neque quos odio suscipit soluta v'}/>
-                    
+                    <ChatBubble sender message={'hello'} />
+                    <ChatBubble reciver message={'hi how are you?'} />
+                    <ChatBubble sender message={'I am fine. you?'} />
+                    <ChatBubble reciver message={'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem sequi sint provident ex non eveniet tempora asperiores a impedit alias! Explicabo in reiciendis adipisci dolore minus. Cupiditate obcaecati molestiae rem ducimus eaque ipsa at? Voluptate repellendus accusamus molestias quis consequuntur! Et non nisi neque quos odio suscipit soluta voluptatibus optio?'} />
+                    <ChatBubble sender message={' non eveniet tempora asperiores a impedit alias! Explicabo in reiciendis adipisci dolore minus. Cupiditate obcaecati molestiae rem ducimus eaque ipsa at? Voluptate repellendus accusamus molestias quis consequuntur! Et non nisi neque quos odio suscipit soluta v'} />
+
                 </div>
             </div>
 
