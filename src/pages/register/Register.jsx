@@ -105,7 +105,6 @@ const Register = () => {
             setPassError('')
             setNameError('')
             setEmailError('')
-            // loading(true)
             LoginUser(Email, Password)
                 .then((result) => {
                     updateProfile(result.user, {
@@ -116,7 +115,6 @@ const Register = () => {
                         verifyEmail(result.user)
                         logOut()
                         navigate('/login')
-                        console.log(result.user);
                         set(ref(db, 'AllUsers/'+ result.user.uid), {
                             username: result.user.displayName,
                             email: result.user.email,
@@ -124,14 +122,14 @@ const Register = () => {
                         });
 
                     }).catch((error) => {
-                        console.log(error);
+                        alert(error);
 
                     });
 
 
 
                 })
-                .catch(error => console.log(error))
+                .catch(error => alert(error))
         }
 
 
